@@ -1651,6 +1651,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767171138}
   m_CullTransparentMesh: 1
+--- !u!1 &868919172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 868919173}
+  m_Layer: 8
+  m_Name: AttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &868919173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 868919172}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.392, y: -0.072, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1008482213}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &945558736
 GameObject:
   m_ObjectHideFlags: 3
@@ -1782,6 +1813,7 @@ GameObject:
   - component: {fileID: 1008482209}
   - component: {fileID: 1008482214}
   - component: {fileID: 1008482215}
+  - component: {fileID: 1008482216}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -1805,6 +1837,7 @@ MonoBehaviour:
   speed: 5
   rb: {fileID: 1008482210}
   anim: {fileID: 1008482214}
+  player_Combat: {fileID: 1008482216}
 --- !u!50 &1008482210
 Rigidbody2D:
   serializedVersion: 4
@@ -1931,7 +1964,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 868919173}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1008482214
@@ -1971,6 +2005,29 @@ MonoBehaviour:
   maxHealth: 100
   healthText: {fileID: 656929799}
   healthTextAnim: {fileID: 656929801}
+--- !u!114 &1008482216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008482208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5444af001d7d5144e91afac44ba40d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackPoint: {fileID: 868919173}
+  weaponRange: 1
+  knockbackForce: 20
+  knockbackTime: 0.15
+  stunTime: 0.3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  damage: 1
+  anim: {fileID: 1008482214}
+  coooldown: 2
 --- !u!1 &1031951786
 GameObject:
   m_ObjectHideFlags: 0
@@ -2428,7 +2485,9 @@ GameObject:
   - component: {fileID: 1600573428}
   - component: {fileID: 1600573429}
   - component: {fileID: 1600573430}
-  m_Layer: 0
+  - component: {fileID: 1600573431}
+  - component: {fileID: 1600573432}
+  m_Layer: 9
   m_Name: Enemy_Torch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2662,6 +2721,32 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1600573431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600573422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87fd6081364ec5f4cafd8f7953aa2aa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 5
+  maxHealth: 5
+--- !u!114 &1600573432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600573422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a01c7050087d904abfbfe04ad66572a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1749778075
 GameObject:
   m_ObjectHideFlags: 0
