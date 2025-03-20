@@ -12,10 +12,18 @@ public class Enemy_Movement : MonoBehaviour
     public float playerDetectRange = 5;
     public Transform detectionPoint;
     public LayerMask playerLayer;
+    
+    [Header("Patrol Settings")]
+    public Transform[] patrolPoints; // Array of patrol points
+    public float waitTimeAtPoint = 1f; // How long to wait at each patrol point
+    public float pointReachedDistance = 0.1f; // How close to get to a point before considering it reached
 
     private float attackCooldownTimer;
     private int facingDirection = 1;
     private EnemyState enemyState;
+    private int currentPatrolIndex = 0;
+    private float waitTimer = 0f;
+    private bool isWaiting = false;
 
     private Rigidbody2D rb;
     private Transform player;
@@ -27,6 +35,13 @@ public class Enemy_Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         ChangeState(EnemyState.Idle);
+        
+        // Validate patrol points
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            Debug.LogWarning("No patrol points assigned to enemy! Please assign patrol points in the inspector.");
+            return;
+        }
     }
 
     // Update is called once per frame
@@ -34,7 +49,6 @@ public class Enemy_Movement : MonoBehaviour
     {
         if(enemyState != EnemyState.Knockback)
         {
-
             CheckForPlayer();
             if(attackCooldownTimer > 0)
             {
@@ -48,6 +62,49 @@ public class Enemy_Movement : MonoBehaviour
             else if (enemyState == EnemyState.Attacking)
             {
                 rb.velocity = Vector2.zero;
+            }
+            else if (enemyState == EnemyState.Idle)
+            {
+                Patrol();
+            }
+        }
+    }
+
+    private void Patrol()
+    {
+        if (patrolPoints.Length == 0) return;
+
+        Transform targetPoint = patrolPoints[currentPatrolIndex];
+        
+        // Check if we've reached the current patrol point
+        if (Vector2.Distance(transform.position, targetPoint.position) <= pointReachedDistance)
+        {
+            if (!isWaiting)
+            {
+                isWaiting = true;
+                waitTimer = waitTimeAtPoint;
+                rb.velocity = Vector2.zero;
+            }
+            
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0)
+            {
+                isWaiting = false;
+                // Move to next patrol point
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            }
+        }
+        else
+        {
+            // Move towards patrol point
+            Vector2 direction = (targetPoint.position - transform.position).normalized;
+            rb.velocity = direction * speed;
+            
+            // Update facing direction
+            if (direction.x != 0)
+            {
+                facingDirection = (int)Mathf.Sign(direction.x);
+                transform.localScale = new Vector3(facingDirection, 1, 1);
             }
         }
     }
