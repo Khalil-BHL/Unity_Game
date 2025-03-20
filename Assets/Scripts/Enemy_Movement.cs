@@ -9,7 +9,7 @@ public class Enemy_Movement : MonoBehaviour
     public float speed;
     public float attackRange = 2;
     public float attackCooldown = 2;
-    public float playerDetectRange = 5;
+    public float playerDetectRange = 3;
     public Transform detectionPoint;
     public LayerMask playerLayer;
     
