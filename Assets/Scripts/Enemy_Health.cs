@@ -22,6 +22,11 @@ public class Enemy_Health : MonoBehaviour
         }
         else if (currentHealth <= 0)
         {
+            // Notify EnemyManager before destroying
+            if (EnemyManager.Instance != null)
+            {
+                EnemyManager.Instance.EnemyDied(gameObject);
+            }
             Destroy(gameObject);
         }
     }
