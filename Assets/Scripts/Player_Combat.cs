@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Player_Combat : MonoBehaviour
 {
+    public static Player_Combat Instance { get; private set; }
+    
+    // Add event for player attack
+    public event System.Action OnPlayerAttacked;
+    
     public Transform attackPoint;
     public float weaponRange = 1;
     public float knockbackForce = 50;
@@ -16,6 +21,18 @@ public class Player_Combat : MonoBehaviour
     public float coooldown = 2;
     private float timer;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Update()
     {
         if (timer > 0)
@@ -26,6 +43,9 @@ public class Player_Combat : MonoBehaviour
 
     public void Attack()
     {
+        // Trigger attack event
+        OnPlayerAttacked?.Invoke();
+        
         if (timer <= 0)
         {
             anim.SetBool("isAttacking", true);

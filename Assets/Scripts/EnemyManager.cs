@@ -11,6 +11,9 @@ public class EnemyManager : MonoBehaviour
     [Header("Portal Settings")]
     public GameObject portal;
     
+    // Add event for enemy count changes
+    public event System.Action OnEnemyCountChanged;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -36,6 +39,9 @@ public class EnemyManager : MonoBehaviour
     public void EnemyDied(GameObject enemy)
     {
         enemies.Remove(enemy);
+        
+        // Trigger enemy count changed event
+        OnEnemyCountChanged?.Invoke();
         
         // Check if all enemies are defeated
         if (enemies.Count == 0 && portal != null)
