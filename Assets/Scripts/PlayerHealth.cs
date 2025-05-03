@@ -1,29 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int currentHealth;
-    public int maxHealth;
-    public TMP_Text healthText;
-    public Animator healthTextAnim;
+    public float maxHealth = 100f;
+    private float currentHealth;
+    private Animator animator;
+    private PlayerMovement playerMovement;
+    private Player_Combat playerCombat;
+    private Rigidbody2D rb;
+    private bool isDead = false;
 
-    private void Start()
+    void Start()
     {
-        healthText.text = "HP: " + currentHealth + "/" + maxHealth;
+        currentHealth = maxHealth;
+        animator = GetComponent<Animator>();
+        playerMovement = GetComponent<PlayerMovement>();
+        playerCombat = GetComponent<Player_Combat>();
+        rb = GetComponent<Rigidbody2D>();
     }
-    public void ChangeHealth(int amount)
-    {
-        currentHealth += amount;
-        healthTextAnim.Play("textUpdate");
-        healthText.text = "HP: " + currentHealth + "/" + maxHealth;
 
+    public void TakeDamage(float damage)
+    {
+        if (isDead) return;
+        
+        currentHealth -= damage;
+        
         if (currentHealth <= 0)
         {
-            gameObject.SetActive(false);
+            Die();
         }
     }
 
+    private void Die()
+    {
+        if (isDead) return;
+        
+        isDead = true;
+        
+        // Use the correct animation parameter name for death
+        if (animator != null)
+        {
+            animator.SetTrigger("Death");  // Changed from "exit" to "Death"
+        }
+        
+        // Disable player movement and combat
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+        if (playerCombat != null)
+        {
+            playerCombat.enabled = false;
+        }
+        
+        // Stop any movement
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
 }

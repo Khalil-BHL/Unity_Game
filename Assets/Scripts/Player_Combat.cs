@@ -54,14 +54,42 @@ public class Player_Combat : MonoBehaviour
         }
     }
 
-    public void DealDamage()
+    void DealDamage()
     {
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(attackPoint.position, weaponRange, enemyLayer);
-
-        if (enemies.Length > 0)
+        // First check if attackPoint exists
+        if (attackPoint == null)
         {
-            enemies[0].GetComponent<Enemy_Health>().ChangeHealth(-damage);
-            enemies[0].GetComponent<Enemy_Knockback>().Knockback(transform, knockbackForce, knockbackTime, stunTime);
+            Debug.LogError("Attack Point is not assigned in Player_Combat!");
+            return;
+        }
+
+        // Get all colliders in attack range
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, weaponRange, enemyLayer);
+
+        // Debug log to check if we're detecting anything
+        if (hitEnemies.Length > 0)
+        {
+            Debug.Log($"Hit {hitEnemies.Length} enemies");
+        }
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (enemy == null) continue;
+
+            // Try to get BossEnemy component
+            BossEnemy bossEnemy = enemy.GetComponent<BossEnemy>();
+            if (bossEnemy != null)
+            {
+                bossEnemy.TakeDamage(damage);
+                continue;
+            }
+
+            // Try to get regular Enemy_Health component
+            Enemy_Health enemyHealth = enemy.GetComponent<Enemy_Health>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.ChangeHealth(-damage);  // Changed from TakeDamage to ChangeHealth with negative damage
+            }
         }
     }
 

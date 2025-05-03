@@ -9,12 +9,23 @@ public class TutorialManager : MonoBehaviour
     public TextMeshProUGUI enemyCountText;
     public GameObject tutorialPanel;
     
+    [Header("Portal References")]
+    public GameObject portalTuto;
+    
     [Header("Tutorial States")]
     private bool hasMoved = false;
     private bool hasAttacked = false;
+    private bool enemiesDefeated = false;
+    private int requiredEnemyCount = 3;
     
     private void Start()
     {
+        // Disable portal at start
+        if (portalTuto != null)
+        {
+            portalTuto.SetActive(false);
+        }
+        
         // Show initial movement tutorial
         ShowTutorial("Use WASD to move");
         
@@ -78,7 +89,24 @@ public class TutorialManager : MonoBehaviour
     {
         if (enemyCountText != null && EnemyManager.Instance != null)
         {
-            enemyCountText.text = $"Enemies Remaining: {EnemyManager.Instance.enemies.Count}";
+            int remainingEnemies = EnemyManager.Instance.EnemiesRemaining;
+            enemyCountText.text = $"Enemies Remaining: {remainingEnemies}";
+            
+            // Check if all required enemies are defeated
+            if (remainingEnemies <= 0 && !enemiesDefeated)
+            {
+                enemiesDefeated = true;
+                ActivatePortal();
+                ShowTutorial("Portal activated! Enter to proceed.");
+            }
+        }
+    }
+    
+    private void ActivatePortal()
+    {
+        if (portalTuto != null)
+        {
+            portalTuto.SetActive(true);
         }
     }
     

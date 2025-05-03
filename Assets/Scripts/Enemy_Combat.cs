@@ -17,8 +17,12 @@ public class Enemy_Combat : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            hits[0].GetComponent<PlayerHealth>().ChangeHealth(-damage);
-            hits[0].GetComponent<PlayerMovement>().Knockback(transform, knockbackForce, stunTime);
+            PlayerHealth playerHealth = hits[0].GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+                hits[0].GetComponent<PlayerMovement>().Knockback(transform, knockbackForce, stunTime);
+            }
         }
     }
 }

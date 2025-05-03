@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Enemy_Health : MonoBehaviour
 {
-
+    // Add this event
+    public event System.Action OnEnemyDeath;
+    
     public int currentHealth;
     public int maxHealth;
+    
     // Start is called before the first frame update
     private void Start()
     {
@@ -25,8 +28,12 @@ public class Enemy_Health : MonoBehaviour
             // Notify EnemyManager before destroying
             if (EnemyManager.Instance != null)
             {
-                EnemyManager.Instance.EnemyDied(gameObject);
+                EnemyManager.Instance.RegisterKill();
             }
+            
+            // Trigger the event before destroying
+            OnEnemyDeath?.Invoke();
+            
             Destroy(gameObject);
         }
     }
